@@ -8,22 +8,28 @@ public class Scrabble {
 
 
         int score = -1;
-        String answerWord;
-        for(int i = 0; i < tiles.length(); i++) {
-            ArrayList<Pair<String, Integer>> wordList = Utils.extractWords("sowpods.txt", tiles.length() - i);
-            ArrayList<String> tileLetterCombos = Utils.generateComninations(tiles.length() - i, tiles);
+        String answerWord = null;
+        for(int i = 0; i < tiles.length() -1; i++) {
+            int shift = 0;
+            if(condition == 2)
+                shift = 1;
+
+            ArrayList<Pair<String, Long>> wordList = Utils.extractWords("sowpods.txt", tiles.length() - i + shift);
+            ArrayList<String> tileLetterCombos = Utils.generateCombinations(tiles.length() - i, tiles);
 
             for(String word: tileLetterCombos) {
-                int currScore = Utils.checkWordList(wordList, word);
-                if(score < currScore) {
-                    score = currScore;
-                    answerWord = word;
+                String dictWord = Utils.checkWordList(wordList, word);
+                if(dictWord != null && score < Utils.computeScore(dictWord)) {
+                    score = Utils.computeScore(dictWord);
+                    answerWord = dictWord;
 
                 }
 
             }
         }
-        return ans;
+
+        return new Pair<String, Integer>(answerWord, score);
+
     }
 
 }
